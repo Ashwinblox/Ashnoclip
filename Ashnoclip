@@ -1,0 +1,88 @@
+-- Create the GUI
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local WelcomeLabel = Instance.new("TextLabel")
+local NoclipButton = Instance.new("TextButton")
+local MinimizeButton = Instance.new("TextButton")
+local MinimizedButton = Instance.new("TextButton")
+
+-- Properties
+ScreenGui.Parent = game.CoreGui
+
+MainFrame.Size = UDim2.new(0, 300, 0, 200)
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Parent = ScreenGui
+
+WelcomeLabel.Size = UDim2.new(1, 0, 0, 50)
+WelcomeLabel.BackgroundTransparency = 1
+WelcomeLabel.Text = "Welcome to AshNoclip"
+WelcomeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+WelcomeLabel.Parent = MainFrame
+
+NoclipButton.Size = UDim2.new(1, 0, 0, 50)
+NoclipButton.Position = UDim2.new(0, 0, 0, 50)
+NoclipButton.Text = "Toggle Noclip"
+NoclipButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+NoclipButton.Parent = MainFrame
+
+MinimizeButton.Size = UDim2.new(1, 0, 0, 50)
+MinimizeButton.Position = UDim2.new(0, 0, 0, 100)
+MinimizeButton.Text = "Minimize"
+MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinimizeButton.Parent = MainFrame
+
+-- Minimized button
+MinimizedButton.Size = UDim2.new(0, 100, 0, 50)
+MinimizedButton.Position = UDim2.new(0.5, -50, 0.5, -25)
+MinimizedButton.Text = "AshNoclip"
+MinimizedButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinimizedButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MinimizedButton.Visible = false
+MinimizedButton.Parent = ScreenGui
+
+-- Noclip functionality
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local noclipEnabled = false
+
+local function toggleNoclip()
+    noclipEnabled = not noclipEnabled
+
+    if noclipEnabled then
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    else
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = true
+            end
+        end
+    end
+end
+
+NoclipButton.MouseButton1Click:Connect(toggleNoclip)
+
+-- Minimize functionality
+local isMinimized = false
+MinimizeButton.MouseButton1Click:Connect(function()
+    isMinimized = not isMinimized
+    MainFrame.Visible = not isMinimized
+    MinimizedButton.Visible = isMinimized
+end)
+
+-- Restore functionality
+MinimizedButton.MouseButton1Click:Connect(function()
+    isMinimized = false
+    MainFrame.Visible = true
+    MinimizedButton.Visible = false
+end)
+
+-- Make the minimized button draggable
+MinimizedButton.Active = true
+MinimizedButton.Draggable = true
